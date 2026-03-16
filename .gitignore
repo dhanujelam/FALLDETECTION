@@ -1,0 +1,67 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# OS Generated Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Virtual Environments
+venv/
+env/
+.env
+
+# C Extensions
+*.so
+
+# Distribution / packaging
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Databases and Local Storage (Auto-generated during runtime)
+*.sqlite3
+*.db
+incidents.db
+security_events.db
+
+# Application Logs
+*.log
+error.log
+output.log
+output.txt
+
+# Local generation tests (Snapshots / images generated over tests)
+snapshots/*
+!snapshots/.keep 
+
+# Ultralytics cache
+runs/
+yolov8n-pose.pt
+yolov8n-pose.onnx
+
+# Idea / VSCode config files
+.idea/
+.vscode/

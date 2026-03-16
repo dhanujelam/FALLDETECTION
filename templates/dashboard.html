@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FALLGUARD PRO | Control Center</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+        }
+
+        body {
+            background: #000;
+            color: #fff;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar {
+            height: 55px;
+            background: #0b4582;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 25px;
+            border-bottom: 1px solid #000;
+        }
+
+        .navbar .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: #fff;
+        }
+
+        .navbar .system-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 0.85rem;
+            color: #d1e3f8;
+        }
+
+        .system-online {
+            background: #334155;
+            padding: 6px 14px;
+            border-radius: 20px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-dot {
+            height: 8px;
+            width: 8px;
+            background-color: #4ade80;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .container {
+            display: flex;
+            flex: 1;
+            height: calc(100vh - 55px);
+        }
+
+        .video-container {
+            flex: 1;
+            position: relative;
+            background: #0a0a0a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-right: 1px solid #000;
+        }
+
+        .video-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .cam-info {
+            position: absolute;
+            top: 25px;
+            left: 25px;
+            z-index: 2;
+        }
+
+        .cam-info h2 {
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+            font-weight: bold;
+            text-transform: uppercase;
+            text-shadow: 1px 1px 2px black;
+        }
+
+        .cam-info p {
+            font-size: 0.75rem;
+            color: #ddd;
+            font-weight: 600;
+            text-shadow: 1px 1px 2px black;
+        }
+
+        .sidebar {
+            width: 380px;
+            background: #135596;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stats-row {
+            display: flex;
+            height: 110px;
+            background: #114c87;
+            border-bottom: 1px solid #0a3d70;
+        }
+
+        .stat-box {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 5px;
+        }
+
+        .stat-box:first-child {
+            border-right: 1px solid #0a3d70;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            line-height: 1.2;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            letter-spacing: 1.5px;
+            color: #93c5fd;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        #occupancyValue {
+            color: #fff;
+        }
+
+        #statusValue {
+            color: #4ade80;
+            font-size: 1.8rem;
+        }
+
+        /* --- EMERGENCY DISPATCH BUTTON --- */
+        .btn-dispatch {
+            background: #dc2626;
+            color: white;
+            width: 100%;
+            padding: 12px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            border: none;
+            cursor: pointer;
+            border-bottom: 1px solid #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-dispatch:hover {
+            background: #b91c1c;
+        }
+
+        .log-header {
+            padding: 10px 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: #fff;
+            background: #135596;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #0a3d70;
+        }
+
+        .log-container {
+            flex: 1;
+            overflow-y: auto;
+            background: #164a80;
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+
+        .log-item {
+            padding: 12px 20px;
+            border-bottom: 1px solid #103f6e;
+            font-size: 0.85rem;
+            color: #e2e8f0;
+            line-height: 1.4;
+        }
+
+        .controls {
+            background: #135596;
+            border-top: 2px solid #0a3d70;
+        }
+
+        .controls-title {
+            padding: 15px 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: #fff;
+            text-transform: uppercase;
+        }
+
+        button {
+            border: none;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            transition: background 0.1s;
+            border-radius: 0;
+            text-transform: uppercase;
+        }
+
+        .row-1 {
+            display: flex;
+            width: 100%;
+            border-top: 1px solid #0a3d70;
+        }
+
+        .btn-ack {
+            flex: 1;
+            background: #0b3b70;
+            color: #fff;
+            padding: 20px;
+            font-size: 1rem;
+        }
+
+        .btn-ack:hover {
+            background: #0f4c8f;
+        }
+
+        .btn-ack.active {
+            background: #ef4444;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                background: #ef4444;
+            }
+
+            50% {
+                background: #b91c1c;
+            }
+
+            100% {
+                background: #ef4444;
+            }
+        }
+
+        .row-2 {
+            display: flex;
+            width: 100%;
+            border-top: 1px solid #0a3d70;
+        }
+
+        .btn-half {
+            flex: 1;
+            padding: 15px;
+            color: #fff;
+        }
+
+        .btn-half:first-child {
+            border-right: 1px solid #0a3d70;
+        }
+
+        .btn-toggle {
+            background: #3f4245;
+            color: #fbbf24;
+        }
+
+        .btn-toggle.enabled {
+            color: #4ade80;
+        }
+
+        .btn-toggle:hover {
+            background: #4b4e52;
+        }
+
+        .btn-demo {
+            background: #0b3b70;
+        }
+
+        .btn-demo:hover {
+            background: #0f4c8f;
+        }
+
+        /* --- HIDDEN MODAL FOR DISPATCH CALLS --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            background: #0b3b70;
+            width: 450px;
+            border-radius: 8px;
+            border: 2px solid #3b82f6;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+        }
+
+        .modal-header {
+            background: #1e3a8a;
+            padding: 15px 20px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-bottom: 1px solid #3b82f6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .close-btn {
+            background: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+        }
+
+        .close-btn:hover {
+            color: #ef4444;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-body p {
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            color: #bfdbfe;
+        }
+
+        .call-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .btn-call {
+            background: #1e40af;
+            padding: 15px;
+            color: white;
+            border-radius: 4px;
+            border: 1px solid #3b82f6;
+            transition: all 0.2s;
+        }
+
+        .btn-call:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+        }
+
+        .btn-call.emergency {
+            background: #dc2626;
+            border-color: #f87171;
+        }
+
+        .btn-call.emergency:hover {
+            background: #ef4444;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="navbar">
+        <div class="logo">FALLGUARD PRO</div>
+        <div class="system-info">
+            <span id="clock">Loading time...</span>
+            <div class="system-online"><span class="status-dot"></span> SYSTEM ONLINE</div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="video-container">
+            <div class="cam-info">
+                <h2>CAM-01 | MAIN SENSOR</h2>
+                <p>LIVE AI TELEMETRY</p>
+            </div>
+            <img src="/video_feed" alt="Live Feed">
+        </div>
+        <div class="sidebar">
+            <div class="stats-row">
+                <div class="stat-box">
+                    <div class="stat-value" id="occupancyValue">0</div>
+                    <div class="stat-label">Occupancy</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="statusValue">SAFE</div>
+                    <div class="stat-label">System Status</div>
+                </div>
+            </div>
+
+            <button class="btn-dispatch" onclick="openCallModal()">🚨 INITIATE EMERGENCY DISPATCH</button>
+
+            <div class="log-header">LIVE EVENT LOG</div>
+            <ul class="log-container" id="logList">
+                <li class="log-item">Connecting to telemetry stream...</li>
+            </ul>
+            <div class="controls">
+                <div class="controls-title">SYSTEM CONTROLS</div>
+                <div class="row-1">
+                    <button id="ackBtn" class="btn-ack" onclick="sendPost('/acknowledge')">✓ ACKNOWLEDGE ALARM</button>
+                </div>
+                <div class="row-2">
+                    <button id="gestureBtn" class="btn-half btn-toggle enabled" onclick="sendPost('/toggle_gesture')">🖐
+                        GESTURES ON</button>
+                    <button id="crowdBtn" class="btn-half btn-toggle" onclick="sendPost('/toggle_crowd')">👥 OVERCROWD
+                        OFF</button>
+                </div>
+                <div class="row-2">
+                    <button id="demoBtn" class="btn-half btn-demo" style="width:100%" onclick="toggleDemo()">🔔 TEST
+                        HARDWARE ALARM</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="callModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                DISPATCH COMMUNICATOR
+                <button class="close-btn" onclick="closeCallModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Select a unit to dispatch. Calling will automatically silence local sirens.</p>
+                <div class="call-grid">
+                    <button class="btn-call emergency" onclick="makeCall('108')">🚑 Call 108</button>
+                    <button class="btn-call emergency" onclick="makeCall('100')">🚓 Call 100</button>
+                    <button class="btn-call" onclick="makeCall('Floor 1')">📞 Floor 1</button>
+                    <button class="btn-call" onclick="makeCall('Floor 2')">📞 Floor 2</button>
+                    <button class="btn-call" onclick="makeCall('Floor 3')">📞 Floor 3</button>
+                    <button class="btn-call" onclick="makeCall('Floor 4')">📞 Floor 4</button>
+                    <button class="btn-call" style="grid-column: span 2;" onclick="makeCall('Floor 5')">📞 Floor
+                        5</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateClock() {
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+            document.getElementById('clock').innerText = `${dateStr}, ${timeStr.toLowerCase()}`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        async function sendPost(endpoint, payload = null) {
+            try {
+                const opts = { method: 'POST' };
+                if (payload) {
+                    opts.headers = { 'Content-Type': 'application/json' };
+                    opts.body = JSON.stringify(payload);
+                }
+                await fetch(endpoint, opts);
+            }
+            catch (err) { console.error("Action failed:", err); }
+        }
+
+        // --- NEW MODAL JS LOGIC ---
+        function openCallModal() {
+            document.getElementById('callModal').style.display = 'flex';
+        }
+
+        function closeCallModal() {
+            document.getElementById('callModal').style.display = 'none';
+        }
+
+        function makeCall(target) {
+            let msg = `Dialing ${target}... Please standby.`;
+            if (target.includes('Floor')) {
+                msg = `Calling ${target} representative...`;
+            }
+            alert(msg);
+
+            // Send the signal to Flask to stop Arduino alarm and log it
+            sendPost('/emergency_call', { target: target });
+            closeCallModal();
+        }
+        // --------------------------
+
+        let isDemoPlaying = false;
+        function toggleDemo() {
+            isDemoPlaying = !isDemoPlaying;
+            if (isDemoPlaying) {
+                sendPost('/play_demo', { action: 'start' });
+                document.getElementById('demoBtn').innerText = "🔇 STOP ALARM";
+            } else {
+                sendPost('/play_demo', { action: 'stop' });
+                document.getElementById('demoBtn').innerText = "🔔 TEST HARDWARE ALARM";
+            }
+        }
+
+        async function fetchState() {
+            try {
+                const res = await fetch('/state');
+                const state = await res.json();
+
+                document.getElementById('occupancyValue').innerText = state.people_count;
+                const statusEl = document.getElementById('statusValue');
+                const ackBtn = document.getElementById('ackBtn');
+
+                if (state.active_alert) {
+                    statusEl.innerText = state.active_alert.replace('_', ' ');
+                    statusEl.style.color = "#ef4444";
+                    ackBtn.classList.add('active');
+                } else {
+                    statusEl.innerText = "SAFE";
+                    statusEl.style.color = "#4ade80";
+                    ackBtn.classList.remove('active');
+                }
+
+                const logHTML = state.logs.map(log => `<li class="log-item">${log}</li>`).join('');
+                document.getElementById('logList').innerHTML = logHTML || '<li class="log-item">No recent events.</li>';
+
+                const gestBtn = document.getElementById('gestureBtn');
+                if (state.gesture_enabled) {
+                    gestBtn.innerText = "🖐 GESTURES ON";
+                    gestBtn.classList.add('enabled');
+                } else {
+                    gestBtn.innerText = "🖐 GESTURES OFF";
+                    gestBtn.classList.remove('enabled');
+                }
+
+                const crowdBtn = document.getElementById('crowdBtn');
+                if (state.crowd_enabled) {
+                    crowdBtn.innerText = "👥 OVERCROWD ON";
+                    crowdBtn.classList.add('enabled');
+                } else {
+                    crowdBtn.innerText = "👥 OVERCROWD OFF";
+                    crowdBtn.classList.remove('enabled');
+                }
+            } catch (err) { }
+        }
+
+        setInterval(fetchState, 500);
+        fetchState();
+    </script>
+</body>
+
+</html>

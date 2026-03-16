@@ -1,0 +1,30 @@
+# ─── Surveillance AI — Optimized Dependencies ──────────────────────────────
+# Install: pip install -r requirements.txt
+
+# Core Web Framework
+flask>=3.0.0
+gunicorn>=22.0.0
+
+# Computer Vision
+opencv-python-headless>=4.9.0
+numpy>=1.24.0
+
+# AI / Pose Estimation
+ultralytics>=8.1.0
+torch>=2.0.0
+torchvision>=0.15.0
+onnxruntime-directml>=1.17.0
+onnx>=1.15.0
+onnxslim>=0.1.71
+
+# Configuration
+python-dotenv>=1.0.0
+
+# Alerts
+requests>=2.31.0
+
+# Production
+gevent>=24.0
+
+# Media / Audio
+pygame>=2.6.0
